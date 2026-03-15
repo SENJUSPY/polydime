@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, Sparkles, Zap, Shield, ArrowRight, MessageSquare, Upload } from 'lucide-react';
+import { Book3D } from './Book3D';
 
 interface LandingProps {
   onGetStarted: () => void;
@@ -99,24 +100,37 @@ const Landing = ({ onGetStarted, onUploadClick }: LandingProps) => {
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1 }}
-              className="relative"
+              className="relative flex items-center justify-center"
             >
-              <div className="aspect-[4/5] bg-muted/20 rounded-3xl overflow-hidden shadow-2xl relative group">
-                <img 
-                  src="https://picsum.photos/seed/engineering/800/1000" 
-                  alt="Engineering Student" 
-                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
-                  referrerPolicy="no-referrer"
+              <div className="relative z-10">
+                <Book3D 
+                  title="Engineering Physics" 
+                  coverUrl="https://picsum.photos/seed/physics/400/500"
+                  onClick={onGetStarted}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-dark/60 to-transparent"></div>
-                <div className="absolute bottom-10 left-10 right-10">
-                  <div className="text-xs uppercase font-bold tracking-[0.3em] text-accent mb-2">The Academic Companion</div>
-                  <div className="text-3xl font-display text-bg leading-none">CRAFTED FOR THE <br /> MODERN ENGINEER.</div>
-                </div>
               </div>
+              
+              {/* Floating Labels */}
+              <motion.div 
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity }}
+                className="absolute -top-10 -right-10 bg-white p-4 rounded-2xl shadow-xl border border-muted/10 z-20 hidden md:block"
+              >
+                <div className="text-[10px] font-bold text-accent uppercase tracking-widest mb-1">New Resource</div>
+                <div className="text-sm font-display text-dark">THERMODYNAMICS V2</div>
+              </motion.div>
+
+              <motion.div 
+                animate={{ y: [0, 10, 0] }}
+                transition={{ duration: 5, repeat: Infinity }}
+                className="absolute -bottom-10 -left-10 bg-dark p-4 rounded-2xl shadow-xl z-20 hidden md:block"
+              >
+                <div className="text-[10px] font-bold text-accent/50 uppercase tracking-widest mb-1">AI Summary</div>
+                <div className="text-sm font-display text-bg">QUANTUM MECHANICS</div>
+              </motion.div>
+
               {/* Decorative Elements */}
-              <div className="absolute -top-10 -right-10 w-40 h-40 bg-accent/10 rounded-full blur-3xl"></div>
-              <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-dark/5 rounded-full blur-3xl"></div>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-accent/5 rounded-full blur-3xl -z-10"></div>
             </motion.div>
           </div>
         </div>

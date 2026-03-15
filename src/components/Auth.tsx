@@ -35,21 +35,34 @@ export const Auth = ({ onClose, onSuccess }: AuthProps) => {
   const [message, setMessage] = useState('');
 
   const getErrorMessage = (err: any) => {
-    if (err.code) return AUTH_ERRORS[err.code] || AUTH_ERRORS['default'];
+    console.error('Auth Error Details:', err);
     
+    // Handle Firebase Auth error codes
+    if (err.code && AUTH_ERRORS[err.code]) return AUTH_ERRORS[err.code];
+    
+    // Fallback for unhandled auth codes
+    if (err.code?.startsWith('auth/')) {
+      return `Authentication Error (${err.code.replace('auth/', '')}): ${err.message || 'Please try again.'}`;
+    }
+
+    // Handle Firestore errors wrapped in our handler
     try {
-      const parsed = JSON.parse(err.message);
-      if (parsed.error) {
-        if (parsed.error.includes('Missing or insufficient permissions')) {
-          return "You don't have permission to perform this action. Please check your account status.";
+      const message = err.message || String(err);
+      if (message.startsWith('{')) {
+        const parsed = JSON.parse(message);
+        if (parsed.error) {
+          if (parsed.error.includes('Missing or insufficient permissions')) {
+            return "Permission Denied: Your profile couldn't be accessed. Please check your account.";
+          }
+          return `Database Error: ${parsed.error}`;
         }
-        return parsed.error;
       }
     } catch (e) {
       // Not a JSON error
     }
     
-    return err.message || AUTH_ERRORS['default'];
+    // Final fallback
+    return err.message || String(err) || AUTH_ERRORS['default'];
   };
 
   const handleGoogleSignIn = async () => {

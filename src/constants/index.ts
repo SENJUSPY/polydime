@@ -9,6 +9,16 @@ export const AUTH_ERRORS: Record<string, string> = {
   "auth/too-many-requests":       "Too many attempts. Please wait a moment before trying again.",
   "auth/email-already-in-use":    "An account with this email already exists. Try logging in instead.",
   "auth/network-request-failed":  "Connection issue. Please check your internet and try again.",
+  "auth/invalid-login-credentials": "Invalid email or password. Please check your credentials and try again.",
+  "auth/operation-not-allowed":   "This sign-in method is not enabled. Please contact support.",
+  "auth/weak-password":           "The password is too weak. Please use a stronger password.",
+  "auth/requires-recent-login":   "This action requires a recent login. Please sign in again.",
+  "auth/popup-closed-by-user":    "The sign-in popup was closed before completion. Please try again.",
+  "auth/popup-blocked":           "The sign-in popup was blocked by your browser. Please allow popups for this site.",
+  "auth/cancelled-popup-request": "Only one sign-in popup can be open at a time.",
+  "auth/account-exists-with-different-credential": "An account already exists with the same email address but different sign-in credentials.",
+  "auth/auth-domain-config-required": "Configuration error. Please contact support.",
+  "auth/operation-not-supported-in-this-environment": "This operation is not supported in this environment.",
   "default":                      "Something went wrong. Please try again in a moment."
 };
 
