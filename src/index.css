@@ -1,24 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Outfit:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 
 :root {
-  --bg: #F5F5F0;
-  --dark: #141414;
-  --accent: #E8FF42;
-  --muted: #8E9299;
+  --snow-white: #efedef;
+  --warm-silver: #ceccce;
+  --signal-green: #6ead3a;
+  --graphite: #4c4947;
+  --obsidian: #222022;
 }
 
 @theme {
   --font-display: "Syne", sans-serif;
-  --font-body: "DM+Sans", sans-serif;
-  --color-bg: var(--bg);
-  --color-dark: var(--dark);
-  --color-accent: var(--accent);
-  --color-muted: var(--muted);
+  --font-body: "Outfit", sans-serif;
+  
+  --color-snow-white: var(--snow-white);
+  --color-warm-silver: var(--warm-silver);
+  --color-signal-green: var(--signal-green);
+  --color-graphite: var(--graphite);
+  --color-obsidian: var(--obsidian);
+  
+  /* Mapping to existing semantic names if possible, or just using new ones */
+  --color-bg: var(--snow-white);
+  --color-dark: var(--obsidian);
+  --color-accent: var(--signal-green);
+  --color-muted: var(--warm-silver);
+  --color-body: var(--graphite);
 }
 
 @layer base {
   body {
-    @apply bg-bg text-dark antialiased;
+    @apply bg-snow-white text-obsidian antialiased font-body;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-extrabold tracking-tighter;
   }
 }
 
@@ -49,5 +64,22 @@
   }
   .translate-z--32 {
     transform: translateZ(-32px);
+  }
+  
+  .hover-underline-green {
+    position: relative;
+  }
+  .hover-underline-green::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--signal-green);
+    transition: width 0.3s ease;
+  }
+  .hover-underline-green:hover::after {
+    width: 100%;
   }
 }

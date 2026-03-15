@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, Sparkles, Zap, Shield, ArrowRight, MessageSquare, Upload } from 'lucide-react';
+import { BookOpen, Sparkles, Zap, Shield, ArrowRight, MessageSquare, Upload, Quote } from 'lucide-react';
 import { Book3D } from './Book3D';
 
 interface LandingProps {
@@ -32,28 +32,37 @@ const Landing = ({ onGetStarted, onUploadClick }: LandingProps) => {
     }
   ];
 
+  const stats = [
+    { label: "RESOURCES", value: "50K+" },
+    { label: "STUDENTS", value: "120K" },
+    { label: "COLLEGES", value: "450+" },
+    { label: "AI QUERIES", value: "1M+" }
+  ];
+
   return (
-    <div className="bg-bg overflow-x-hidden">
+    <div className="bg-snow-white overflow-x-hidden selection:bg-signal-green selection:text-obsidian">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-bg/80 backdrop-blur-md border-b border-muted/20">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-dark rounded-lg flex items-center justify-center">
-              <BookOpen className="w-5 h-5 text-accent" />
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-obsidian/95 backdrop-blur-md border-b border-warm-silver/10">
+        <div className="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-signal-green rounded-sm flex items-center justify-center">
+              <BookOpen className="w-6 h-6 text-obsidian" />
             </div>
-            <span className="font-display text-xl tracking-tighter text-dark">POLYDIME</span>
+            <span className="font-display text-2xl tracking-tighter text-snow-white uppercase">POLYDIME</span>
           </div>
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-xs uppercase font-bold tracking-widest text-dark/60 hover:text-accent transition-colors">Features</a>
-            <button 
-              onClick={onUploadClick}
-              className="text-xs uppercase font-bold tracking-widest text-dark/60 hover:text-accent transition-colors"
-            >
-              Upload PDF
-            </button>
+          <div className="hidden md:flex items-center gap-12">
+            {['Features', 'Library', 'Community'].map((item) => (
+              <a 
+                key={item}
+                href={`#${item.toLowerCase()}`} 
+                className="text-[10px] uppercase font-bold tracking-[0.3em] text-warm-silver hover:text-signal-green transition-colors hover-underline-green"
+              >
+                {item}
+              </a>
+            ))}
             <button 
               onClick={onGetStarted}
-              className="px-6 py-2 bg-dark text-bg text-xs uppercase font-bold tracking-widest hover:bg-accent hover:text-dark transition-all rounded-full"
+              className="px-8 py-3 bg-signal-green text-obsidian text-[10px] uppercase font-bold tracking-[0.3em] hover:bg-snow-white transition-all"
             >
               Get Started
             </button>
@@ -62,47 +71,58 @@ const Landing = ({ onGetStarted, onUploadClick }: LandingProps) => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-40 pb-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      <section className="relative min-h-screen bg-obsidian pt-40 pb-20 px-6 flex items-center overflow-hidden">
+        <div className="max-w-7xl mx-auto w-full relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
+              className="lg:col-span-7"
             >
-              <h1 className="text-7xl md:text-9xl font-display leading-[0.85] text-dark mb-8">
+              <div className="text-signal-green text-[10px] uppercase font-bold tracking-[0.5em] mb-8">Academic Infrastructure v2.0</div>
+              <h1 className="text-7xl md:text-[10rem] font-display leading-[0.8] text-snow-white mb-12 uppercase">
                 ENGINEER <br />
-                <span className="text-accent">YOUR FUTURE.</span>
+                <span className="text-warm-silver/20">YOUR</span> <br />
+                <span className="relative">
+                  FUTURE.
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    whileInView={{ width: '100%' }}
+                    transition={{ delay: 0.5, duration: 1 }}
+                    className="absolute -bottom-4 left-0 h-4 bg-signal-green"
+                  />
+                </span>
               </h1>
-              <p className="text-xl text-body/80 font-body max-w-lg mb-12 leading-relaxed">
+              <p className="text-xl text-warm-silver font-body max-w-xl mb-16 leading-relaxed">
                 PolyDime is the ultimate academic companion for engineering students. 
                 Access curated notes, textbooks, and AI-powered study tools in one seamless platform.
               </p>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-8">
                 <button 
                   onClick={onGetStarted}
-                  className="px-10 py-5 bg-dark text-bg font-display text-lg uppercase tracking-widest hover:bg-accent hover:text-dark transition-all flex items-center gap-3 group"
+                  className="px-12 py-6 bg-signal-green text-obsidian font-display text-lg uppercase tracking-widest hover:bg-snow-white transition-all flex items-center gap-4 group"
                 >
                   Start Studying
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                  <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
                 </button>
                 <button 
                   onClick={onUploadClick}
-                  className="px-10 py-5 border-2 border-dark text-dark font-display text-lg uppercase tracking-widest hover:bg-dark hover:text-bg transition-all flex items-center gap-3 group"
+                  className="px-12 py-6 border border-warm-silver/20 text-snow-white font-display text-lg uppercase tracking-widest hover:bg-snow-white hover:text-obsidian transition-all flex items-center gap-4 group"
                 >
                   Upload PDF
-                  <Upload className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
+                  <Upload className="w-6 h-6 group-hover:-translate-y-1 transition-transform" />
                 </button>
               </div>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 1 }}
-              className="relative flex items-center justify-center"
+              className="lg:col-span-5 relative flex items-center justify-center"
             >
-              <div className="relative z-10">
+              <div className="relative z-10 scale-125 lg:scale-150">
                 <Book3D 
                   title="Engineering Physics" 
                   coverUrl="https://picsum.photos/seed/physics/400/500"
@@ -112,57 +132,79 @@ const Landing = ({ onGetStarted, onUploadClick }: LandingProps) => {
               
               {/* Floating Labels */}
               <motion.div 
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity }}
-                className="absolute -top-10 -right-10 bg-white p-4 rounded-2xl shadow-xl border border-muted/10 z-20 hidden md:block"
+                animate={{ y: [0, -20, 0] }}
+                transition={{ duration: 6, repeat: Infinity }}
+                className="absolute -top-20 -right-10 bg-snow-white p-6 shadow-2xl border-l-4 border-signal-green z-20 hidden md:block"
               >
-                <div className="text-[10px] font-bold text-accent uppercase tracking-widest mb-1">New Resource</div>
-                <div className="text-sm font-display text-dark">THERMODYNAMICS V2</div>
-              </motion.div>
-
-              <motion.div 
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 5, repeat: Infinity }}
-                className="absolute -bottom-10 -left-10 bg-dark p-4 rounded-2xl shadow-xl z-20 hidden md:block"
-              >
-                <div className="text-[10px] font-bold text-accent/50 uppercase tracking-widest mb-1">AI Summary</div>
-                <div className="text-sm font-display text-bg">QUANTUM MECHANICS</div>
+                <div className="text-[8px] font-bold text-signal-green uppercase tracking-widest mb-2">New Resource</div>
+                <div className="text-lg font-display text-obsidian">THERMODYNAMICS V2</div>
               </motion.div>
 
               {/* Decorative Elements */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-accent/5 rounded-full blur-3xl -z-10"></div>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-signal-green/5 rounded-full blur-[120px] -z-10"></div>
             </motion.div>
+          </div>
+        </div>
+        
+        {/* Background Text */}
+        <div className="absolute bottom-0 right-0 text-[20vw] font-display text-snow-white/[0.02] leading-none select-none pointer-events-none uppercase tracking-tighter">
+          POLYDIME
+        </div>
+      </section>
+
+      {/* Stats Row */}
+      <section className="py-24 bg-snow-white border-y border-warm-silver/20">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-12">
+            {stats.map((stat, idx) => (
+              <motion.div 
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                className="text-center lg:text-left"
+              >
+                <div className="text-5xl lg:text-7xl font-display text-obsidian mb-2">{stat.value}</div>
+                <div className="text-[10px] font-bold text-graphite uppercase tracking-[0.4em]">{stat.label}</div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-32 bg-dark text-bg">
+      <section id="features" className="py-40 bg-obsidian text-snow-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="mb-20 max-w-2xl">
-            <h2 className="text-5xl font-display leading-none mb-6">
-              BUILT FOR <br />
-              <span className="text-accent">ACADEMIC SUCCESS.</span>
-            </h2>
-            <p className="text-muted/60 font-body">
-              We've gathered everything you need to excel in your engineering journey, from first year to final semester.
-            </p>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 mb-32">
+            <div className="lg:col-span-5">
+              <div className="text-signal-green text-[10px] uppercase font-bold tracking-[0.5em] mb-8">The Toolkit</div>
+              <h2 className="text-6xl md:text-8xl font-display leading-[0.9] mb-12 uppercase">
+                BUILT FOR <br />
+                <span className="text-warm-silver/20">ACADEMIC</span> <br />
+                SUCCESS.
+              </h2>
+            </div>
+            <div className="lg:col-span-7 flex items-end">
+              <p className="text-xl text-warm-silver font-body max-w-xl leading-relaxed">
+                We've gathered everything you need to excel in your engineering journey, from first year to final semester. Our platform is designed to be sharp, intentional, and unapologetically confident.
+              </p>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-warm-silver/10 border border-warm-silver/10">
             {features.map((feature, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
                 transition={{ delay: idx * 0.1 }}
-                className="p-8 border border-muted/10 hover:border-accent/50 transition-all group"
+                className="p-12 bg-obsidian border-l-2 border-transparent hover:border-signal-green transition-all group cursor-default"
               >
-                <div className="w-12 h-12 bg-muted/5 rounded-xl flex items-center justify-center mb-6 text-accent group-hover:bg-accent group-hover:text-dark transition-all">
+                <div className="w-12 h-12 bg-warm-silver/5 flex items-center justify-center mb-10 text-signal-green group-hover:bg-signal-green group-hover:text-obsidian transition-all">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-display mb-4">{feature.title}</h3>
-                <p className="text-sm text-muted/40 font-body leading-relaxed">
+                <h3 className="text-2xl font-display mb-6 uppercase tracking-tight">{feature.title}</h3>
+                <p className="text-sm text-warm-silver font-body leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity">
                   {feature.desc}
                 </p>
               </motion.div>
@@ -171,19 +213,45 @@ const Landing = ({ onGetStarted, onUploadClick }: LandingProps) => {
         </div>
       </section>
 
+      {/* Testimonial Strip */}
+      <section className="py-32 bg-snow-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col items-center text-center">
+            <Quote className="w-16 h-16 text-signal-green/20 mb-12" />
+            <motion.p 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              className="text-3xl md:text-5xl font-display text-obsidian max-w-4xl leading-tight mb-12 uppercase italic"
+            >
+              "PolyDime transformed how I approach my semester finals. The AI summaries are a game-changer for complex subjects like Thermodynamics."
+            </motion.p>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-obsidian rounded-full overflow-hidden">
+                <img src="https://picsum.photos/seed/student1/100/100" alt="Student" referrerPolicy="no-referrer" />
+              </div>
+              <div className="text-left">
+                <div className="text-sm font-bold text-obsidian uppercase tracking-widest">Rahul Sharma</div>
+                <div className="text-[10px] text-graphite uppercase tracking-widest">Mechanical Engineering, 3rd Year</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
-      <section className="py-32 bg-accent">
+      <section className="py-40 bg-signal-green">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
           >
-            <h2 className="text-6xl md:text-8xl font-display text-dark leading-none mb-12">
+            <div className="text-obsidian text-[10px] uppercase font-bold tracking-[0.5em] mb-12">Final Call</div>
+            <h2 className="text-7xl md:text-[12rem] font-display text-obsidian leading-[0.8] mb-16 uppercase">
               READY TO <br /> EXCEL?
             </h2>
             <button 
               onClick={onGetStarted}
-              className="px-12 py-6 bg-dark text-bg font-display text-xl uppercase tracking-widest hover:scale-105 transition-all shadow-2xl"
+              className="px-16 py-8 bg-obsidian text-snow-white font-display text-2xl uppercase tracking-widest hover:scale-105 transition-all shadow-2xl"
             >
               Get Started Now
             </button>
@@ -192,43 +260,56 @@ const Landing = ({ onGetStarted, onUploadClick }: LandingProps) => {
       </section>
 
       {/* Footer */}
-      <footer className="py-20 bg-bg border-t border-muted/20">
+      <footer className="py-32 bg-obsidian text-snow-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
-            <div className="md:col-span-2">
-              <div className="flex items-center gap-2 mb-6">
-                <div className="w-8 h-8 bg-dark rounded-lg flex items-center justify-center">
-                  <BookOpen className="w-5 h-5 text-accent" />
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-20 mb-32">
+            <div className="md:col-span-5">
+              <div className="flex items-center gap-3 mb-10">
+                <div className="w-10 h-10 bg-signal-green rounded-sm flex items-center justify-center">
+                  <BookOpen className="w-6 h-6 text-obsidian" />
                 </div>
-                <span className="font-display text-xl tracking-tighter text-dark">POLYDIME</span>
+                <span className="font-display text-2xl tracking-tighter uppercase">POLYDIME</span>
               </div>
-              <p className="text-body/60 max-w-sm font-body">
+              <p className="text-warm-silver/60 max-w-sm font-body text-lg leading-relaxed">
                 Your ultimate academic companion for engineering studies. 
                 Empowering students with knowledge and AI tools.
               </p>
             </div>
-            <div>
-              <h4 className="font-display text-dark mb-6">PLATFORM</h4>
-              <ul className="space-y-4 text-sm font-body text-body/60">
-                <li><a href="#" className="hover:text-accent transition-colors">Library</a></li>
-                <li><a href="#" className="hover:text-accent transition-colors">Notes</a></li>
-                <li><a href="#" className="hover:text-accent transition-colors">AI Help</a></li>
+            <div className="md:col-span-2">
+              <h4 className="text-[10px] font-bold tracking-[0.4em] text-signal-green mb-10 uppercase">PLATFORM</h4>
+              <ul className="space-y-6 text-sm font-bold tracking-widest uppercase">
+                <li><a href="#" className="hover:text-signal-green transition-colors">Library</a></li>
+                <li><a href="#" className="hover:text-signal-green transition-colors">Notes</a></li>
+                <li><a href="#" className="hover:text-signal-green transition-colors">AI Help</a></li>
               </ul>
             </div>
-            <div>
-              <h4 className="font-display text-dark mb-6">CONNECT</h4>
-              <div className="flex items-center gap-4">
-                <button className="w-10 h-10 bg-muted/20 rounded-full flex items-center justify-center hover:bg-accent hover:text-dark transition-all">
-                  <MessageSquare className="w-4 h-4" />
+            <div className="md:col-span-2">
+              <h4 className="text-[10px] font-bold tracking-[0.4em] text-signal-green mb-10 uppercase">COMPANY</h4>
+              <ul className="space-y-6 text-sm font-bold tracking-widest uppercase">
+                <li><a href="#" className="hover:text-signal-green transition-colors">About</a></li>
+                <li><a href="#" className="hover:text-signal-green transition-colors">Careers</a></li>
+                <li><a href="#" className="hover:text-signal-green transition-colors">Contact</a></li>
+              </ul>
+            </div>
+            <div className="md:col-span-3">
+              <h4 className="text-[10px] font-bold tracking-[0.4em] text-signal-green mb-10 uppercase">NEWSLETTER</h4>
+              <div className="flex border-b border-warm-silver/20 pb-4">
+                <input 
+                  type="email" 
+                  placeholder="EMAIL ADDRESS" 
+                  className="bg-transparent border-none outline-none text-[10px] font-bold tracking-widest w-full placeholder:text-warm-silver/20"
+                />
+                <button className="text-signal-green hover:translate-x-1 transition-transform">
+                  <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
             </div>
           </div>
-          <div className="flex flex-col md:flex-row justify-between items-center pt-10 border-t border-muted/10 text-[10px] uppercase font-bold tracking-widest text-body/40">
+          <div className="flex flex-col md:flex-row justify-between items-center pt-20 border-t border-warm-silver/10 text-[10px] uppercase font-bold tracking-[0.4em] text-warm-silver/20">
             <div>© 2026 POLYDIME. ALL RIGHTS RESERVED.</div>
-            <div className="flex gap-8 mt-4 md:mt-0">
-              <a href="#" className="hover:text-dark transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-dark transition-colors">Terms of Service</a>
+            <div className="flex gap-12 mt-8 md:mt-0">
+              <a href="#" className="hover:text-snow-white transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-snow-white transition-colors">Terms of Service</a>
             </div>
           </div>
         </div>

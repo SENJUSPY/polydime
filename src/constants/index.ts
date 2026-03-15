@@ -19,6 +19,7 @@ export const AUTH_ERRORS: Record<string, string> = {
   "auth/account-exists-with-different-credential": "An account already exists with the same email address but different sign-in credentials.",
   "auth/auth-domain-config-required": "Configuration error. Please contact support.",
   "auth/operation-not-supported-in-this-environment": "This operation is not supported in this environment.",
+  "auth/unauthorized-domain":     "This domain is not authorized for sign-in. Please add this URL to your Firebase Console Authorized Domains.",
   "default":                      "Something went wrong. Please try again in a moment."
 };
 

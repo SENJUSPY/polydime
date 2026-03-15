@@ -18,7 +18,7 @@ export const Book3D = ({ title, coverUrl, onClick }: Book3DProps) => {
         initial={{ rotateY: 0 }}
       >
         {/* Front Cover */}
-        <div className="absolute inset-0 w-full h-full bg-dark rounded-r-lg shadow-xl backface-hidden z-10 overflow-hidden border-l-4 border-accent/30">
+        <div className="absolute inset-0 w-full h-full bg-obsidian rounded-r-lg shadow-xl backface-hidden z-10 overflow-hidden border-l-4 border-signal-green/30">
           {coverUrl ? (
             <img 
               src={coverUrl} 
@@ -27,30 +27,30 @@ export const Book3D = ({ title, coverUrl, onClick }: Book3DProps) => {
               referrerPolicy="no-referrer"
             />
           ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-dark to-muted/20">
-              <div className="text-accent font-display text-2xl mb-4 leading-none uppercase">{title}</div>
-              <div className="w-12 h-1 bg-accent/30 rounded-full"></div>
+            <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-obsidian to-graphite">
+              <div className="text-signal-green font-display text-2xl mb-4 leading-none uppercase">{title}</div>
+              <div className="w-12 h-1 bg-signal-green/30 rounded-full"></div>
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent"></div>
         </div>
 
         {/* Spine */}
-        <div className="absolute top-0 left-0 w-10 h-full bg-dark origin-left rotate-y-[-90deg] translate-x-[-5px] border-r border-white/10 flex items-center justify-center">
-          <div className="rotate-90 text-[8px] font-bold text-accent/50 whitespace-nowrap uppercase tracking-widest">
+        <div className="absolute top-0 left-0 w-10 h-full bg-obsidian origin-left rotate-y-[-90deg] translate-x-[-5px] border-r border-white/10 flex items-center justify-center">
+          <div className="rotate-90 text-[8px] font-bold text-signal-green/50 whitespace-nowrap uppercase tracking-widest">
             {title}
           </div>
         </div>
 
         {/* Pages (Right Side) */}
-        <div className="absolute top-0 right-0 w-8 h-full bg-white/90 origin-right rotate-y-[90deg] translate-x-[4px] shadow-inner flex flex-col justify-around py-2">
+        <div className="absolute top-0 right-0 w-8 h-full bg-snow-white origin-right rotate-y-[90deg] translate-x-[4px] shadow-inner flex flex-col justify-around py-2">
           {[...Array(20)].map((_, i) => (
-            <div key={i} className="h-[1px] w-full bg-muted/20"></div>
+            <div key={i} className="h-[1px] w-full bg-warm-silver/20"></div>
           ))}
         </div>
 
         {/* Back Cover */}
-        <div className="absolute inset-0 w-full h-full bg-dark rounded-l-lg translate-z-[-32px] shadow-2xl"></div>
+        <div className="absolute inset-0 w-full h-full bg-obsidian rounded-l-lg translate-z-[-32px] shadow-2xl"></div>
       </motion.div>
       
       {/* Shadow */}
