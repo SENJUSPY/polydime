@@ -25,7 +25,8 @@ localforage.config({
 });
 
 // Initialize PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`;
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+console.log('PDF.js worker configured:', pdfjs.GlobalWorkerOptions.workerSrc);
 
 interface ReaderProps {
   bookId?: string;

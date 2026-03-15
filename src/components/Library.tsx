@@ -26,7 +26,8 @@ localforage.config({
 });
 
 // Initialize PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`;
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+console.log('PDF.js worker configured:', pdfjs.GlobalWorkerOptions.workerSrc);
 
 interface Book {
   id: string;
@@ -65,14 +66,23 @@ export const Library = ({ onOpenBook }: LibraryProps) => {
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      console.log('No file selected');
+      return;
+    }
 
+    console.log('Starting upload for file:', file.name);
     setIsUploading(true);
     setUploadProgress(10);
 
     try {
+      console.log('Converting file to array buffer...');
       const arrayBuffer = await file.arrayBuffer();
+      console.log('Array buffer created, size:', arrayBuffer.byteLength);
+
+      console.log('Loading PDF with PDF.js...');
       const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+      console.log('PDF loaded successfully, pages:', pdf.numPages);
       setUploadProgress(50);
 
       const bookId = uuidv4();
@@ -85,15 +95,16 @@ export const Library = ({ onOpenBook }: LibraryProps) => {
         type: 'pdf'
       };
 
-      // Store PDF blob locally
+      console.log('Storing PDF blob locally...');
       await localforage.setItem(`pdf-${bookId}`, arrayBuffer);
 
-      // Persist metadata list locally
+      console.log('Storing metadata...');
       const updatedBooks = [bookData, ...books];
       setBooks(updatedBooks);
       await localforage.setItem('books', updatedBooks);
 
       setUploadProgress(100);
+      console.log('Upload completed successfully');
       setTimeout(() => {
         setIsUploading(false);
         setUploadProgress(0);
