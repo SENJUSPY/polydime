@@ -371,12 +371,12 @@ export const Auth = ({ onClose, onSuccess }: AuthProps) => {
 
                 {error && (
                   <motion.div 
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-between"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-3 px-6 bg-red-50 border border-red-200 rounded-full flex items-center justify-between gap-4"
                   >
-                    <p className="text-red-600 text-xs font-medium">{error}</p>
-                    <button onClick={() => setError('')} className="text-red-400 hover:text-red-600">
+                    <p className="text-red-500 text-[11px] font-bold uppercase tracking-wider flex-1">{error}</p>
+                    <button onClick={() => setError('')} className="text-red-400 hover:text-red-600 transition-colors">
                       <X className="w-4 h-4" />
                     </button>
                   </motion.div>

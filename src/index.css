@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #F8F7F4;
+  --dark: #141414;
+  --accent: #6EAD3A;
+  --muted: #8E8E8E;
+  --body: #4A4A4A;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--dark);
+  font-family: 'DM Sans', sans-serif;
+}
+
+.font-display {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+}
+
+.font-body {
+  font-family: 'DM Sans', sans-serif;
+}
