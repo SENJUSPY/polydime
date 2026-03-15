@@ -65,7 +65,7 @@ export const Auth = ({ onClose, onSuccess }: AuthProps) => {
         const path = `users/${user.uid}`;
         try {
           await setDoc(doc(db, 'users', user.uid), {
-            name: user.displayName || '',
+            name: user.displayName || user.email?.split('@')[0] || 'User',
             email: user.email || '',
             collegeName: '',
             rollNumber: '',
