@@ -6,20 +6,44 @@ export const useTutorial = (shouldStart: boolean) => {
   useEffect(() => {
     if (!shouldStart) return;
 
-    const hasSeenTutorial = localStorage.getItem('hasSeenTutorial');
-    if (hasSeenTutorial) return;
+    // Check if tutorial already shown
+    const hasShown = localStorage.getItem('polydime_tutorial_shown');
+    if (hasShown) return;
 
-    const driverObj = driver({
+    const d = driver({
       showProgress: true,
+      animate: true,
       steps: [
-        { element: '#library-header', popover: { title: 'Your Library', description: 'This is where all your saved books and PDFs live.' } },
-        { element: '#upload-button', popover: { title: 'Upload Resources', description: 'Click here to add your own PDFs to the library.' } },
-        { element: '#search-bar', popover: { title: 'Search', description: 'Quickly find any resource in your collection.' } },
-        { element: '#recent-books', popover: { title: 'Recently Opened', description: 'Pick up right where you left off.' } }
+        { 
+          element: '.library-upload', 
+          popover: { 
+            title: 'Upload Materials', 
+            description: 'Start by uploading your own PDFs or study materials here.',
+            side: 'bottom'
+          } 
+        },
+        { 
+          element: '.materials-tab', 
+          popover: { 
+            title: 'Curated Materials', 
+            description: 'Access curated materials specifically for your course and branch.',
+            side: 'bottom'
+          } 
+        },
+        { 
+          element: '.chatbot-toggle', 
+          popover: { 
+            title: 'AI Assistant', 
+            description: 'Have questions? Our AI assistant is here to help you navigate.',
+            side: 'left'
+          } 
+        }
       ]
     });
 
-    driverObj.drive();
-    localStorage.setItem('hasSeenTutorial', 'true');
+    setTimeout(() => {
+      d.drive();
+      localStorage.setItem('polydime_tutorial_shown', 'true');
+    }, 1000);
   }, [shouldStart]);
 };

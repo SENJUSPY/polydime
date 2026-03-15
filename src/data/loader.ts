@@ -1,21 +1,29 @@
 export const loadMaterials = async (course: string, branch: string) => {
-  // Mock data for now
+  // Simulate API call
   return [
     {
-      id: '1',
-      title: 'Engineering Mathematics I',
-      filename: 'math1.pdf',
+      id: 'm1',
+      title: 'Engineering Mathematics-I',
+      type: 'Textbook',
       subject: 'Mathematics',
-      semester: 'Semester 1',
-      type: 'PDF'
+      semester: '1st Semester',
+      filename: 'math1.pdf'
     },
     {
-      id: '2',
+      id: 'm2',
       title: 'Programming in C',
-      filename: 'c_prog.pdf',
+      type: 'Notes',
       subject: 'Computer Science',
-      semester: 'Semester 1',
-      type: 'PDF'
+      semester: '1st Semester',
+      filename: 'c_prog.pdf'
+    },
+    {
+      id: 'm3',
+      title: 'Engineering Physics',
+      type: 'Textbook',
+      subject: 'Physics',
+      semester: '1st Semester',
+      filename: 'physics.pdf'
     }
   ];
 };
