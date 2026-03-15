@@ -109,25 +109,44 @@ export const Reader = ({ bookId, material, onBack }: ReaderProps) => {
   const [showControls, setShowControls] = useState(true);
   const [theme, setTheme] = useState<'light' | 'dark' | 'sepia'>('light');
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const flipBookRef = useRef<any>(null);
 
   useEffect(() => {
     const loadResource = async () => {
       setLoading(true);
+      setLoadError(null);
+
       try {
         if (bookId) {
+          console.log('Reader: loading bookId', bookId);
           const storedBooks = (await localforage.getItem<Book[]>('books')) || [];
           const found = storedBooks.find((b) => b.id === bookId);
           if (found) {
             setBook(found);
             setCurrentPage(found.currentPage || 0);
 
-            const pdfData = await localforage.getItem<ArrayBuffer>(`pdf-${bookId}`);
-            if (pdfData) {
-              const loadingTask = pdfjs.getDocument({ data: pdfData });
-              const pdfDoc = await loadingTask.promise;
-              setPdf(pdfDoc);
+            let pdfData = await localforage.getItem<any>(`pdf-${bookId}`);
+            console.log('Reader: loaded pdfData from storage', pdfData);
+
+            if (!pdfData) {
+              throw new Error('PDF data not found in local storage');
             }
+
+            // Some storage drivers return Blob; convert to ArrayBuffer
+            if (pdfData instanceof Blob) {
+              pdfData = await pdfData.arrayBuffer();
+            }
+            // Convert typed arrays to ArrayBuffer
+            if (ArrayBuffer.isView(pdfData)) {
+              pdfData = pdfData.buffer;
+            }
+
+            const loadingTask = pdfjs.getDocument({ data: pdfData });
+            const pdfDoc = await loadingTask.promise;
+            setPdf(pdfDoc);
+          } else {
+            throw new Error('Book metadata not found');
           }
         } else if (material) {
           setBook({
@@ -146,12 +165,14 @@ export const Reader = ({ bookId, material, onBack }: ReaderProps) => {
             setBook(prev => ({ ...prev, totalPages: 10 }));
           }
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error loading resource:', error);
+        setLoadError(error?.message || 'Unable to load PDF.');
       } finally {
         setLoading(false);
       }
     };
+
     loadResource();
   }, [bookId, material]);
 
@@ -207,6 +228,42 @@ export const Reader = ({ bookId, material, onBack }: ReaderProps) => {
       <div className="fixed inset-0 bg-dark flex flex-col items-center justify-center text-bg">
         <Loader2 className="w-12 h-12 animate-spin text-accent mb-4" />
         <h2 className="text-2xl font-display uppercase tracking-widest">Opening Resource...</h2>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="fixed inset-0 flex flex-col items-center justify-center bg-dark text-bg p-6">
+        <div className="max-w-md w-full rounded-2xl bg-black/40 border border-white/10 p-8 text-center">
+          <h2 className="text-xl font-display mb-4">Unable to open document</h2>
+          <p className="text-sm opacity-80 mb-6">{loadError}</p>
+          <div className="flex justify-center gap-3">
+            <button
+              onClick={() => {
+                setLoadError(null);
+                setLoading(true);
+                // Trigger reload by updating state slightly
+                setTimeout(() => {
+                  if (bookId || material) {
+                    // Force a re-mount by resetting state
+                    setPdf(null);
+                    setBook(null);
+                  }
+                }, 10);
+              }}
+              className="px-5 py-2 bg-accent text-dark font-bold rounded-full hover:bg-accent/90 transition"
+            >
+              Retry
+            </button>
+            <button
+              onClick={onBack}
+              className="px-5 py-2 bg-white/10 text-bg font-bold rounded-full hover:bg-white/20 transition"
+            >
+              Back
+            </button>
+          </div>
+        </div>
       </div>
     );
   }

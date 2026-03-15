@@ -11,7 +11,6 @@ export const AUTH_ERRORS: Record<string, string> = {
   "auth/operation-not-allowed":   "Email/password sign-in is disabled. Enable Email/Password under Authentication → Sign-in method in the Firebase Console.",
   "auth/network-request-failed":  "Connection issue. Please check your internet and try again.",
   "auth/invalid-login-credentials": "Invalid email or password. Please check your credentials and try again.",
-  "auth/operation-not-allowed":   "This sign-in method is not enabled. Please contact support.",
   "auth/weak-password":           "The password is too weak. Please use a stronger password.",
   "auth/requires-recent-login":   "This action requires a recent login. Please sign in again.",
   "auth/popup-closed-by-user":    "The sign-in popup was closed before completion. Please try again.",

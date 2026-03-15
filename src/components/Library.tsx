@@ -96,7 +96,8 @@ export const Library = ({ onOpenBook }: LibraryProps) => {
       };
 
       console.log('Storing PDF blob locally...');
-      await localforage.setItem(`pdf-${bookId}`, arrayBuffer);
+      // Storing as Uint8Array ensures compatibility across storage drivers
+      await localforage.setItem(`pdf-${bookId}`, new Uint8Array(arrayBuffer));
 
       console.log('Storing metadata...');
       const updatedBooks = [bookData, ...books];
