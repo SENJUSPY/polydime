@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { db, auth } from '../lib/firebase';
-import { collection, onSnapshot, query, orderBy, addDoc, updateDoc, doc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, 
@@ -19,6 +17,7 @@ import {
 import * as pdfjs from 'pdfjs-dist';
 import { GoogleGenAI } from "@google/genai";
 import localforage from 'localforage';
+import { v4 as uuidv4 } from 'uuid';
 
 // Initialize localforage
 localforage.config({
@@ -41,10 +40,9 @@ interface Book {
 
 interface LibraryProps {
   onOpenBook: (id: string) => void;
-  onRequireAuth: () => void;
 }
 
-export const Library = ({ onOpenBook, onRequireAuth }: LibraryProps) => {
+export const Library = ({ onOpenBook }: LibraryProps) => {
   const [books, setBooks] = useState<Book[]>([]);
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -56,35 +54,18 @@ export const Library = ({ onOpenBook, onRequireAuth }: LibraryProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (!auth.currentUser) {
-      onRequireAuth();
-      return;
-    }
-
-    const q = query(
-      collection(db, 'users', auth.currentUser.uid, 'books'),
-      orderBy('lastOpened', 'desc')
-    );
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const booksData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Book[];
-      setBooks(booksData);
-    });
-
-    return () => unsubscribe();
-  }, [onRequireAuth]);
+    const loadBooks = async () => {
+      const stored = await localforage.getItem<Book[]>('books');
+      if (stored) {
+        setBooks(stored);
+      }
+    };
+    loadBooks();
+  }, []);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    if (!auth.currentUser) {
-      onRequireAuth();
-      return;
-    }
 
     setIsUploading(true);
     setUploadProgress(10);
@@ -94,26 +75,30 @@ export const Library = ({ onOpenBook, onRequireAuth }: LibraryProps) => {
       const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
       setUploadProgress(50);
 
+      const bookId = uuidv4();
       const bookData = {
+        id: bookId,
         title: file.name.replace('.pdf', ''),
         currentPage: 0,
         totalPages: pdf.numPages,
         lastOpened: Date.now(),
-        type: 'pdf',
-        createdAt: serverTimestamp()
+        type: 'pdf'
       };
 
-      const docRef = await addDoc(collection(db, 'users', auth.currentUser.uid, 'books'), bookData);
-      
       // Store PDF blob locally
-      await localforage.setItem(docRef.id, arrayBuffer);
-      
+      await localforage.setItem(`pdf-${bookId}`, arrayBuffer);
+
+      // Persist metadata list locally
+      const updatedBooks = [bookData, ...books];
+      setBooks(updatedBooks);
+      await localforage.setItem('books', updatedBooks);
+
       setUploadProgress(100);
       setTimeout(() => {
         setIsUploading(false);
         setUploadProgress(0);
         // Check if we should suggest AI covers
-        setPendingCoverBooks(prev => [...prev, { id: docRef.id, ...bookData }]);
+        setPendingCoverBooks(prev => [...prev, bookData]);
         setShowAIModal(true);
       }, 500);
 
@@ -124,8 +109,6 @@ export const Library = ({ onOpenBook, onRequireAuth }: LibraryProps) => {
   };
 
   const generateAICover = async (book: Book) => {
-    if (!auth.currentUser) return;
-
     try {
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY as string });
       const response = await ai.models.generateContent({
@@ -138,9 +121,11 @@ export const Library = ({ onOpenBook, onRequireAuth }: LibraryProps) => {
       const imagePart = response.candidates?.[0]?.content?.parts.find(p => p.inlineData);
       if (imagePart?.inlineData) {
         const coverUrl = `data:image/png;base64,${imagePart.inlineData.data}`;
-        await updateDoc(doc(db, 'users', auth.currentUser.uid, 'books', book.id), {
-          coverUrl
-        });
+        const updatedBooks = books.map((b) =>
+          b.id === book.id ? { ...b, coverUrl } : b
+        );
+        setBooks(updatedBooks);
+        await localforage.setItem('books', updatedBooks);
       }
     } catch (error) {
       console.error('Error generating AI cover:', error);
@@ -148,9 +133,10 @@ export const Library = ({ onOpenBook, onRequireAuth }: LibraryProps) => {
   };
 
   const handleDeleteBook = async (id: string) => {
-    if (!auth.currentUser) return;
-    await deleteDoc(doc(db, 'users', auth.currentUser.uid, 'books', id));
-    await localforage.removeItem(id);
+    const updatedBooks = books.filter((b) => b.id !== id);
+    setBooks(updatedBooks);
+    await localforage.setItem('books', updatedBooks);
+    await localforage.removeItem(`pdf-${id}`);
     setShowDeleteModal(null);
   };
 

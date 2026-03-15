@@ -25,13 +25,12 @@ interface Material {
 }
 
 interface MaterialsProps {
-  course: 'btech' | 'diploma';
-  branch: string;
+  course?: 'btech' | 'diploma';
+  branch?: string;
   onOpenMaterial: (material: Material) => void;
-  onRequireAuth: () => void;
 }
 
-export const Materials = ({ course, branch, onOpenMaterial, onRequireAuth }: MaterialsProps) => {
+export const Materials = ({ course = 'btech', branch = 'cse', onOpenMaterial }: MaterialsProps) => {
   const [materials, setMaterials] = useState<Material[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -168,7 +167,6 @@ export const Materials = ({ course, branch, onOpenMaterial, onRequireAuth }: Mat
               </p>
             </div>
             <button 
-              onClick={onRequireAuth}
               className="px-8 py-4 bg-accent text-dark font-display uppercase tracking-widest text-sm rounded-2xl hover:scale-105 transition-all flex items-center gap-2"
             >
               Upload Material <ExternalLink className="w-4 h-4" />

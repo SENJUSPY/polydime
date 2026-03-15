@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { db, auth } from '../lib/firebase';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeft, 
@@ -39,6 +37,16 @@ interface ReaderProps {
     semester: string;
   };
   onBack: () => void;
+}
+
+interface Book {
+  id: string;
+  title: string;
+  currentPage: number;
+  totalPages: number;
+  lastOpened: number;
+  type: string;
+  coverUrl?: string;
 }
 
 const PDFPage = ({ pdf, pageNumber, theme }: { pdf: any, pageNumber: number, theme: string }) => {
@@ -106,17 +114,14 @@ export const Reader = ({ bookId, material, onBack }: ReaderProps) => {
     const loadResource = async () => {
       setLoading(true);
       try {
-        if (bookId && auth.currentUser) {
-          const docRef = doc(db, 'users', auth.currentUser.uid, 'books', bookId);
-          const docSnap = await getDoc(docRef);
-          
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            setBook(data);
-            setCurrentPage(data.currentPage || 0);
+        if (bookId) {
+          const storedBooks = (await localforage.getItem<Book[]>('books')) || [];
+          const found = storedBooks.find((b) => b.id === bookId);
+          if (found) {
+            setBook(found);
+            setCurrentPage(found.currentPage || 0);
 
-            // Load PDF from localforage
-            const pdfData = await localforage.getItem(bookId) as ArrayBuffer;
+            const pdfData = await localforage.getItem<ArrayBuffer>(`pdf-${bookId}`);
             if (pdfData) {
               const loadingTask = pdfjs.getDocument({ data: pdfData });
               const pdfDoc = await loadingTask.promise;
@@ -128,9 +133,7 @@ export const Reader = ({ bookId, material, onBack }: ReaderProps) => {
             title: material.title,
             totalPages: 0,
           });
-          
-          // For demo, we'll use a placeholder PDF if the file doesn't exist
-          // In a real app, this would be a real URL
+
           const materialUrl = `/materials/${material.filename}`;
           try {
             const loadingTask = pdfjs.getDocument(materialUrl);
@@ -139,7 +142,6 @@ export const Reader = ({ bookId, material, onBack }: ReaderProps) => {
             setBook(prev => ({ ...prev, totalPages: pdfDoc.numPages }));
           } catch (e) {
             console.warn('Material PDF not found, using placeholder logic');
-            // Fallback: set a fake total pages for demo UI
             setBook(prev => ({ ...prev, totalPages: 10 }));
           }
         }
@@ -154,13 +156,17 @@ export const Reader = ({ bookId, material, onBack }: ReaderProps) => {
 
   const handlePageChange = async (index: number) => {
     setCurrentPage(index);
-    if (bookId && auth.currentUser) {
-      const docRef = doc(db, 'users', auth.currentUser.uid, 'books', bookId);
-      await updateDoc(docRef, {
-        currentPage: index,
-        lastOpened: Date.now()
-      });
-    }
+
+    if (!bookId) return;
+
+    const storedBooks = (await localforage.getItem<Book[]>('books')) || [];
+    const updatedBooks = storedBooks.map((b) =>
+      b.id === bookId ? { ...b, currentPage: index, lastOpened: Date.now() } : b
+    );
+    setBook((prev) => (prev ? { ...prev, currentPage: index } : prev));
+    setTimeout(() => {
+      localforage.setItem('books', updatedBooks);
+    }, 0);
   };
 
   const toggleFullscreen = () => {

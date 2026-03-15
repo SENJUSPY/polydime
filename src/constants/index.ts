@@ -8,6 +8,7 @@ export const AUTH_ERRORS: Record<string, string> = {
   "auth/user-disabled":           "This account has been disabled. Please contact support.",
   "auth/too-many-requests":       "Too many attempts. Please wait a moment before trying again.",
   "auth/email-already-in-use":    "An account with this email already exists. Try logging in instead.",
+  "auth/operation-not-allowed":   "Email/password sign-in is disabled. Enable Email/Password under Authentication → Sign-in method in the Firebase Console.",
   "auth/network-request-failed":  "Connection issue. Please check your internet and try again.",
   "auth/invalid-login-credentials": "Invalid email or password. Please check your credentials and try again.",
   "auth/operation-not-allowed":   "This sign-in method is not enabled. Please contact support.",
